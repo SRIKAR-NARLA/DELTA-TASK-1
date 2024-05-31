@@ -137,12 +137,12 @@ cells_div.forEach((cell,index)=>{
 
 pause_resume.addEventListener('click',async ()=>{
     if(!ispaused){
-        pause_resume.innerHTML = "<img src='play.svg'>";
+        pause_resume.innerHTML = "<img src='images/play.svg'>";
         pauseTimer();
     }else{
-        pause_resume.innerHTML = "<img src='pause.svg'>";
+        pause_resume.innerHTML = "<img src='images/pause.svg'>";
         if(isShooting){
-            pause_resume.innerHTML = "<img src='play.svg'>";
+            pause_resume.innerHTML = "<img src='images/play.svg'>";
         }
         if (player === 'bot') {
             botTurn(isBlackTurn);
@@ -186,7 +186,7 @@ listSet.addEventListener('click',(e)=>{
     if(!ispaused){
         ispaused = !ispaused;
     }
-    pause_resume.innerHTML = "<img src='play.svg'>";
+    pause_resume.innerHTML = "<img src='images/play.svg'>";
     pauseTimer();
     if(currentMove === movesMemory.length - 1)
         pause_resume.classList.remove('hidden');
