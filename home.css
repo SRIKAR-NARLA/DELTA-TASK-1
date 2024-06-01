@@ -29,3 +29,28 @@ h1{
     display:flex;
     justify-content: space-between;
 }
+
+@media (max-width: 1022px) {
+    h1{
+        text-align: center;
+    }
+}
+
+@media (max-width: 920px) {
+    h1{
+        text-align: center;
+    }
+    .btn{
+        display: flex;
+        flex-direction: column;
+    }
+    .btn a{
+        text-align: center;
+    }
+}
+
+@media (max-width: 550px) {
+    h1{
+        font-size: 5rem;
+    }
+}

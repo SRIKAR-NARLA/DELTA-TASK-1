@@ -153,10 +153,10 @@ html {
 
 @keyframes moveUp {
   0% {
-    transform: translate3d(0, 4rem, 0) rotate(0deg);
+    transform: translate3d(0, 125%, 0) rotate(0deg);
   }
   100% {
-    transform: translate3d(0, -4rem, 0) rotate(0deg);
+    transform: translate3d(0, -125%, 0) rotate(0deg);
   }
 }
 
@@ -183,7 +183,7 @@ html {
 
 @keyframes moveDownLeft {
   0% {
-    transform: translate3d(0, -4rem, 0) rotate(180deg);
+    transform: translate3d(0, -4rem, 0) rotate(-180deg);
   }
   50% {
     transform: translate3d(0, 0, 0) rotate(-135deg);
@@ -210,28 +210,28 @@ html {
     transform: translate3d(0, 0, 0) rotate(-45deg);
   }
   100% {
-    transform: translate3d(-4rem, 0, 0) rotate(-90deg);
+    transform: translate3d(-125%, 0, 0) rotate(-90deg);
   }
 }
 
 @keyframes moveRight {
   from {
-    transform: translate3d(-4rem, 0, 0) rotate(90deg);
+    transform: translate3d(-125%, 0, 0) rotate(90deg);
   }
   to {
-    transform: translate3d(4rem, 0, 0) rotate(90deg);
+    transform: translate3d(125%, 0, 0) rotate(90deg);
   }
 }
 
 @keyframes moveDownRight {
   0% {
-    transform: translate3d(0, -4rem, 0) rotate(180deg);
+    transform: translate3d(0, -125%, 0) rotate(180deg);
   }
   50% {
     transform: translate3d(0, 0, 0) rotate(135deg);
   }
   100% {
-    transform: translate3d(4rem, 0, 0) rotate(90deg);
+    transform: translate3d(125%, 0, 0) rotate(90deg);
   }
 }
 
@@ -307,6 +307,15 @@ html {
   text-align: center;
   cursor: pointer;
   background-color: #2929298D;
+}
+
+@media (max-width: 1254px) {
+  .father-container{
+    flex-direction: column;
+  }
+  .history{
+    min-height: none;
+  }
 }
 
 
