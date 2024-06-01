@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASK 1</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/font-awesome.min.css">
+    
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="brand-title">RICOCHET RUMBLE</div>
+        <a href="#" class="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </a>
+        <div class="navbar-links">
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="#">Instructions</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="father-container">
+        <div class="players">
+            <section class="player white" id="player1">
+                <h2>Player 1</h2>
+                <div class="status">
+                    <span id="time1">05:00</span>
+                    <span id="cash1">0</span>
+                </div>
+            </section>
+            <section class="player black" id="player2">
+                <h2>Player 2</h2>
+                <div class="status">
+                    <span id="time2">05:00</span>
+                    <span id="cash2">0</span>
+                </div>
+            </section>
+        </div>
+
+        <div class="main_container_with_buttons">
+            <section class="main-container" id="game-board">
+            </section>
+            <div class="buttons">
+                <a href="#" class="anchor left small hidden" id = "black">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <img src='images/left.svg'>
+                </a>
+                <a href="#" class="anchor swap small hidden" id = "black">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <img src='images/swap.svg'>
+                </a>
+                <a href="#" class="anchor right small hidden" id = "black">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <img src='images/right.svg'>
+                </a>
+            </div>
+        </div>
+
+        <section class="move_history">
+            <ul class="history">Moves History</ul>
+            <div class="history-control">
+                <a href="#" class="anchor undo small" id = "undo">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <img src='images/undo.svg'>
+                </a>
+                <a href="#" class="anchor pause_resume small" id = "black">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <img src='images/play.svg'>
+                </a>
+                <a href="#" class="anchor redo small" id = "redo">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <img src='images/redo.svg'>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <dialog id="popup" class="popup">
+        <h1>Game Over!!! <span class="winner">Black</span> Won</h1>
+        <button id="replay">Replay</button>
+        <button class="reset">Play Again</button>
+    </dialog>
+
+
+    <script src="variables.js"></script>
+    <script src="object.js"></script>
+    <script src="pieces.js"></script>
+    <script src="functions.js"></script>
+    <script src="app.js"></script>
+    <script src="timer.js"></script>
+</body>
+</html>
+
