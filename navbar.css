@@ -67,7 +67,7 @@ nav{
     border-radius: 1rem;
 }
 
-.anchor{
+.anchor,dialog .anchor{
     position: relative;
     display:inline-block;
     padding: 1.5rem 3rem;
@@ -82,24 +82,24 @@ nav{
     color: #333;
 }
 
-.small{
+.small,dialog .small{
     padding: 0.5rem 1rem;
     padding-top: 0.75rem;
 }
 
-.anchor:hover{
+.anchor:hover,dialog .anchor:hover{
     color:black;
     background-color: #bdbdbd;
     box-shadow: 0 0 10px #3d3d3d,0 0 40px #3d3d3d,0 0 80px #3d3d3d,0 0 10px #3d3d3d;
     transition-delay: 1s;
 }
 
-.anchor span{
+.anchor span,dialog .anchor span{
     position: absolute;
     display: block;
 }
 
-.anchor span:nth-child(1)   {
+.anchor span:nth-child(1),dialog .anchor span:nth-child(1){
     top:0;
     left:-100%;
     width:100%;
@@ -107,12 +107,12 @@ nav{
     background:linear-gradient(90deg,transparent,#3d3d3d);
 } 
 
-.anchor:hover span:nth-child(1)   {
+.anchor:hover span:nth-child(1),dialog .anchor:hover span:nth-child(1){
     left:100%;
     transition: 1s;
 }  
 
-.anchor span:nth-child(3)   {
+.anchor span:nth-child(3),dialog    .anchor span:nth-child(3){
     bottom:0;
     right:-100%;
     width:100%;
@@ -120,13 +120,13 @@ nav{
     background:linear-gradient(270deg,transparent,#3d3d3d);
 } 
 
-.anchor:hover span:nth-child(3)   {
+.anchor:hover span:nth-child(3),dialog .anchor:hover span:nth-child(3){
     right:100%;
     transition: 1s;
     transition-delay:0.5s;
 } 
 
-.anchor span:nth-child(2)   {
+.anchor span:nth-child(2),dialog .anchor span:nth-child(2){
     top:-100%;
     right:0;
     height:100%;
@@ -134,13 +134,13 @@ nav{
     background:linear-gradient(180deg,transparent,#3d3d3d);
 } 
 
-.anchor:hover span:nth-child(2)   {
+.anchor:hover span:nth-child(2),dialog .anchor:hover span:nth-child(2){
     top:100%;
     transition: 1s;
     transition-delay:0.25s;
 } 
 
-.anchor span:nth-child(4)   {
+.anchor span:nth-child(4),dialog .anchor span:nth-child(4){
     bottom:-100%;
     left:0;
     height:100%;
@@ -148,7 +148,7 @@ nav{
     background:linear-gradient(360deg,transparent,#3d3d3d);
 } 
 
-.anchor:hover span:nth-child(4)   {
+.anchor:hover span:nth-child(4),dialog .anchor:hover span:nth-child(4){
     bottom:100%;
     transition: 1s;
     transition-delay:0.75s;
@@ -202,6 +202,31 @@ dialog.popup {
 }
 
 dialog[open].popup {
+    top: 50%;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+    transition-delay: 0s; 
+}
+
+dialog.warning{
+    height:20rem;
+    width:20rem;
+    z-index:10;
+    background-color: white;
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    visibility: hidden; 
+    transition: transform 1s ease-in-out, visibility 0s 1s; 
+}
+
+dialog[open].warning {
     top: 50%;
     visibility: visible;
     transform: translate(-50%, -50%) scale(1);

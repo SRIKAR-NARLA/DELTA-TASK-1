@@ -96,9 +96,9 @@ const validcells = function(object){
     }  
 
     const moves = array.filter((el)=>
-        el[0]>=0 && el[0]<=7 && el[1]>=0 && el[1]<=7 && !filledcells.includes(el[0]*8 + el[1])
+        el[0]>=0 && el[0]<=7 && el[1]>=0 && el[1]<=7 && cells_class[el[0]*8 + el[1]].occupied===false
    )
-
+   
     return moves;
 }
 
@@ -115,6 +115,9 @@ const resetBgc = function(){
     cells_class.forEach(cell => {
         const colorIndex = (cell.row + cell.column) % 2; 
         cell.setBgc(`${colors[colorIndex]}`); 
+        if(!cell.piece && cell.occupied){
+            cell.setBgc(`red`);
+        }
     });
     (memoryRicochet|| memoryRicochet===0) && cells_class[memoryRicochet].setBgc('#c3d6e5')
 }
@@ -154,11 +157,20 @@ const shoot = async function(blackTurn, spell=null,index=0) {
     swap.classList.add('hidden');
     let movesarray = [];
     cells_class.forEach((cell, index) => {
-        if (cell.piece) {
-            movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform });
+        if(!cell.piece && cell.piecediv){
+            movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:true,health:null });
+        }else if (cell.piecediv) {
+            if(cell.piece.includes('tank')){
+                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:cell.piecediv.dataset.health });
+
+            }else{
+                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:null });
+            }
+        }else if(cell.occupied){
+            movesarray.push({ index: index, piecediv: null,rotation:null,destroyed:false,invisible:false,health:null});
         }
     });
-    console.log(movesarray);
+    console.log(movesarray)
     isShooting = !isShooting;
     if (blackTurn) {
         timer2 = 300;
@@ -182,11 +194,19 @@ const shoot = async function(blackTurn, spell=null,index=0) {
             await moveBullet(index, blackTurn, spell);
         }
     }
+    movesarray.forEach(obj=>{
+        if(cells_class[obj.index].occupied===false){
+            obj.destroyed=true;
+        }
+
+    })
     if(!isreplay){
         movesMemory.push(movesarray);
         isShooting = !isShooting;
     }
     currentMove = currentMove + 1;
+    bar1.value=tank_w.dataset.health;
+    bar2.value=tank_b.dataset.health;
 };
 
 
@@ -235,25 +255,30 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                 return;
             }
 
-            if (!cells_class[nextIndex].occupied) {
+            if (!cells_class[nextIndex].piece) {
                 animateBullet(bullet,path,false);
                 cells_class[nextIndex].setBullet(blackTurn);
                 index = nextIndex;
             } else {
                 if (cells_class[nextIndex].piece && cells_class[nextIndex].piece.includes('titan')) {
                     if (cells_class[nextIndex].piece === 'titan_b') {
-                        //alert('white won');
-                        console.log('hi')
                     } else {
-                        //alert('black won');
-                        console.log('hi')
                     }
                     clearInterval(intervalId);
+                    animateBullet(bullet,path,false);
+                    cells_class[nextIndex].setBullet(blackTurn, path);
+                    timeoutId = setTimeout(() => {
+                        cells_class[nextIndex].removeBullet();
+                    }, 150);
                     ispaused = true;
-                    //body.classList.add('blur');
+                    const colors = ["#ccc", "#ddd"]; 
+                    cells_class.forEach(cell=>{
+                        const colorIndex = (cell.row + cell.column) % 2;
+                        cell.setBgc(`${colors[colorIndex]}`);
+                    })
                     dialog.showModal();
                     dialog.style.display = "flex";
-                    resolve(); // Resolve the Promise
+                    resolve(); 
                 } else if (cells_class[nextIndex].piece && cells_class[nextIndex].piece.includes('tank')) {
                     const tankHit = cells_class[nextIndex].piecediv;
                     if (blackTurn && cells_class[nextIndex].team === 'b' || !blackTurn && cells_class[nextIndex].team === 'w') {
@@ -451,9 +476,10 @@ const setIndex = function(index,path){
 }
 
 const modifyHealth= function(index,div){
-    if(div.dataset.health>=1)
+    if(div.dataset.health>1)
         div.dataset.health--;
     else{
+        div.dataset.health--;
         cells_class[index].removePiece();
         filledcells = filledcells.filter(el=>el!==index);
         filledBotcells = filledBotcells.filter(el=>el!==index);
@@ -491,18 +517,12 @@ const rotateLeftLogic = function(clicked){
         memoryRicochet = null;
         resetBgc();
         await shoot(isBlackTurn);
-        isBlackTurn = !isBlackTurn; // Toggle the turn
+        isBlackTurn = !isBlackTurn; 
         if(isSingleplayer){
             botTurn(isBlackTurn);
             await shoot(isBlackTurn);
             isBlackTurn = !isBlackTurn;
         }
-        // board.classList.toggle('rotate');
-        // filledcells.forEach(index=>{
-        //     if(cells_div[index].firstChild.classList[0] === 'titan'  || cells_div[index].firstChild.classList[0] === 'tank'){
-        //         cells_div[index].classList.toggle('rotate');
-        //     }
-        //     })
         left.removeEventListener('click', rotateLeftHandler);
         right.removeEventListener('click', rotateRightHandler);
     };
@@ -538,18 +558,12 @@ const rotateRight = async (cell,blackTurn) => {
     memoryRicochet = null;
     resetBgc();
     await shoot(isBlackTurn);
-    isBlackTurn = !isBlackTurn; // Toggle the turn
+    isBlackTurn = !isBlackTurn; 
     if(isSingleplayer){
         botTurn(isBlackTurn);
         await shoot(isBlackTurn);
         isBlackTurn = !isBlackTurn;
     }
-    // board.classList.toggle('rotate');
-    // filledcells.forEach(index=>{
-    //     if(cells_div[index].firstChild.classList[0] === 'titan'  || cells_div[index].firstChild.classList[0] === 'tank'){
-    //         cells_div[index].classList.toggle('rotate');
-    //     }
-    //     })
     left.removeEventListener('click', rotateLeftHandler);
     right.removeEventListener('click', rotateRightHandler);
 };
@@ -586,40 +600,44 @@ const swapRicochet = async function(index,indexReplace,blackturn){
         await shoot(isBlackTurn);
         isBlackTurn = !isBlackTurn;
     } 
-    // board.classList.toggle('rotate');
-    // filledcells.forEach(index=>{
-    // if(cells_div[index].firstChild.classList[0] === 'titan'  || cells_div[index].firstChild.classList[0] === 'tank'){
-    //     cells_div[index].classList.toggle('rotate');
-    // }
-    // })
 }
 
 const swapRicochetHandler = () => swapRicochet(memoryRicochet,memoryReplace,isBlackTurn);
 
 function resetComplete() {
+    bar1.value=5;
+    bar2.value=5;
     pauseTimer();
     timer1 = 300;
     timer2 = 300;
     updateTime();
     filledcells = [];
-    filledBotcells=[];
+    filledBotcells = [];
     validCellsArray = [];
+    currentIndex = null;
     memory = null;
     memoryRicochet = null;
-    memoryReplace = null;
+    memoryReplace = null;   
     htmlMemory = null;
     isBlackTurn = false;
     ispaused = true;
-    player = queryParams.player;
-    movesMemory.splice(0, movesMemory.length);
-    currentMove = 0;
-    listSet.innerHTML='';
+    isreplay = false;
+    movesMemory = [];
     isShooting = false;
+    currentMove = 0;
+    cash1.innerText=0;
+    cash2.innerText=0;
+    listSet.innerHTML='';
     cells_class.forEach(cell=>{
         cell.removePiece();
         cell.removeBullet();
     })
-    pause_resume.innerText ="Start";
+    pause_resume.innerHTML =`
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <img src='images/play.svg'>`;
     if(isSingleplayer && player==='player'){
         boardPrePopulate(boardPreArray,'b');
     }else if(isSingleplayer && player==='bot'){
@@ -627,12 +645,6 @@ function resetComplete() {
     }else{
         boardPrePopulate(boardPreArray);
     }
-    // board.classList.remove('rotate');
-    // filledcells.forEach(index=>{
-    // if(cells_div[index].firstChild.classList[0] === 'titan'  || cells_div[index].firstChild.classList[0] === 'tank'){
-    //     cells_div[index].classList.remove('rotate');
-    // }
-    // })
 }
 
 const botTurn = function(blackTurn){
@@ -696,10 +708,12 @@ const botTurn = function(blackTurn){
 
 const addCoins = function(turn,x){
     if(turn){
-        cash2.innerText = String(Number(cash2.innerText)+x);
+        blackCash+=x;
+        cash2.innerText = blackCash;
+
     }else{
-        cash1.innerText = String(Number(cash1.innerText)+x);
-    }
+        whiteCash+=x;
+        cash1.innerText = String(whiteCash);    }
 }
 
 const undoFunction = function(){
@@ -709,15 +723,34 @@ const undoFunction = function(){
         ispaused = !ispaused;
     }
     pause_resume.classList.add('hidden');
-    pause_resume.innerHTML = "<img src='play.svg'>";
+    pause_resume.innerHTML = "<img src='images/play.svg'>";
     pauseTimer();
     movesMemory[currentMove].forEach(cell=>{
         cells_class[cell.index].removePiece();
+
     })
+    resetBgc(); 
     movesMemory[currentMove-1].forEach(cell=>{
-        newPieceDiv = cell.piecediv;
-        newPieceDiv.style.transform = cell.rotation;
-        cells_class[cell.index].setPiece(newPieceDiv);
+        if(cell.invisible){
+            cells_class[cell.index].setPiece(cell.piecediv);
+            cells_class[cell.index].setBgc('pink');
+        }
+        if(cell.piecediv){
+            const newPieceDiv = cell.piecediv;
+            newPieceDiv.style.transform = cell.rotation;
+            if(cell.health){
+                newPieceDiv.dataset.health=cell.health;
+                if(newPieceDiv.id.includes('_w')){
+                    bar1.value=newPieceDiv.dataset.health;
+                }else{
+                    bar2.value=newPieceDiv.dataset.health;
+                }
+            }
+            cells_class[cell.index].setPiece(newPieceDiv);
+        }else{
+            cells_class[cell.index].occupied=true;
+            cells_class[cell.index].setBgc('red');
+        }
     })
     currentMove = currentMove-1;
 }
@@ -727,18 +760,38 @@ const undoFunction = function(){
 const redoFunction = async function() {
     let cannon = null;
     if (currentMove < movesMemory.length - 1) {
+        resetBgc();
 
         movesMemory[currentMove].forEach(cell => {
             cells_class[cell.index].removePiece();
         });
         
         movesMemory[currentMove + 1].forEach(cell => {
-            const newPieceDiv = cell.piecediv;
-            newPieceDiv.style.transform = cell.rotation;
-            cells_class[cell.index].setPiece(newPieceDiv);
-            if ((currentMove % 2 !== 0 && cells_class[cell.index].piece === 'cannon_b') ||
-                (currentMove % 2 === 0 && cells_class[cell.index].piece === 'cannon_w')) {
-                cannon = cell.index;
+            if(isreplay || (cell.destroyed===false && !isreplay)){
+                if(cell.invisible){
+                    cells_class[cell.index].setPiece(cell.piecediv);
+                    cells_class[cell.index].setBgc('pink');
+                    }
+                    if(cell.piecediv){
+                        const newPieceDiv = cell.piecediv;
+                        newPieceDiv.style.transform = cell.rotation;
+                        if(cell.health){
+                            newPieceDiv.dataset.health=cell.health;
+                            if(newPieceDiv.id.includes('_w')){
+                                bar1.value=newPieceDiv.dataset.health;
+                            }else{
+                                bar2.value=newPieceDiv.dataset.health;
+                            }
+                        }
+                        cells_class[cell.index].setPiece(newPieceDiv);
+                    }else{
+                        cells_class[cell.index].occupied=true;
+                        cells_class[cell.index].setBgc('red');
+                    }
+                if ((currentMove % 2 !== 0 && cells_class[cell.index].piece === 'cannon_b') ||
+                    (currentMove % 2 === 0 && cells_class[cell.index].piece === 'cannon_w')) {
+                    cannon = cell.index;
+                }
             }
         });
         
@@ -756,6 +809,14 @@ const redoFunction = async function() {
 
 
 const replay = async function() {
+    cash1.innerText=0;
+    cash2.innerText=0;
+    bar1.value=5;
+    bar2.value=5;
+    tank_b.dataset.health = 5;
+    tank_w.dataset.health = 5;
+    cannon_b.dataset.health = 3;
+    cannon_w.dataset.health = 3;
     isreplay = true;
     ispaused = true;
 
@@ -764,9 +825,21 @@ const replay = async function() {
     });
 
     movesMemory[0].forEach(cell => {
-        newPieceDiv = cell.piecediv;
-        newPieceDiv.style.transform = cell.rotation;
-        cells_class[cell.index].setPiece(newPieceDiv);
+        if(cell.invisible){
+            cells_class[cell.index].setPiece(cell.piecediv);
+            cells_class[cell.index].setBgc('pink');
+        }
+        if(cell.piecediv){
+            const newPieceDiv = cell.piecediv;
+            newPieceDiv.style.transform = cell.rotation;
+            if(cell.health){
+                newPieceDiv.dataset.health=cell.health;
+            }
+            cells_class[cell.index].setPiece(newPieceDiv);
+        }else{
+            cells_class[cell.index].occupied=true;
+            cells_class[cell.index].setBgc('red');
+        }
     });
 
     currentMove = 0;
@@ -803,6 +876,97 @@ const printMove = function(memory1,memory2,way,blackTurn){
     }
     listSet.appendChild(list);
 }
+
+function spellfn(cell,blackTurn){
+    if((cell.team=='b' && blackTurn) || (cell.team=='w' && !blackTurn)){
+        if(cell.piece==='tank_w'){
+            if(whiteCash>=100){
+                tank_w.dataset.health=Number(tank_w.dataset.health)+1;
+                bar1.value = tank_w.dataset.health;
+                whiteCash-=100;
+                cash1.innerText = whiteCash;
+            }else{
+                console.log('ha')
+                warning.showModal();
+            }
+        }else if(cell.piece==='tank_b'){
+            if(blackCash>=100){
+                tank_b.dataset.health=Number(tank_b.dataset.health)+1;
+                bar2.value = tank_b.dataset.health;
+                blackCash-=100;
+                cash2.innerText = blackCash;
+            }else{
+                warning.showModal();
+            }
+        }else if(cell.piece.includes('titan')){
+            if(blackTurn){
+                if(whiteCash>=350){
+                    cell.piece=null
+                    whiteCash-=350;
+                    cash1.innerText = whiteCash;
+                }else{
+                    warning.showModal();
+                }
+            }else{
+                if(blackCash>=350){
+                    cell.piece=null
+                    blackCash-=350;
+                    cash2.innerText = blackCash;
+                }else{
+                    warning.showModal();
+                }
+            }
+        }
+    }else if((cell.team=='b' && !blackTurn) || (cell.team=='w' && blackTurn)){
+        if(cell.piece==='tank_w'){
+            if(blackCash>=200){
+                tank_w.dataset.health=Number(tank_w.dataset.health)-1;
+                bar1.value = tank_w.dataset.health;
+                if(tank_w.dataset.health==='0'){
+                    cell.removePiece();
+                }
+                blackCash-=200;
+                cash2.innerText = blackCash;
+            }else{
+                warning.showModal();
+            }
+        }else{
+            if(whiteCash>=200){
+                tank_b.dataset.health=Number(tank_b.dataset.health)-1;
+                bar2.value = tank_b.dataset.health;
+                if(tank_b.dataset.health==='0'){
+                    cell.removePiece();
+                }
+                whiteCash-=200;
+                cash1.innerText = whiteCash;
+            }else{
+                warning.showModal();
+            }
+        }
+    }else if(cell.occupied===false){
+        if(blackTurn){
+            if(blackCash>=50){
+                cell.occupied=true;
+                cell.setBgc('red');
+                blackCash-=50;
+                cash2.innerText = blackCash;
+            }else{
+                warning.showModal();
+            }
+        }else{
+            if(whiteCash>=50){
+                cell.occupied=true;
+                cell.setBgc('red');
+                whiteCash-=50;
+                cash1.innerText = whiteCash;
+            }else{
+                warning.showModal();
+            } 
+        }
+    }
+}
+
+const spellfnHandler = () => spellfn(cells_class[currentIndex],isBlackTurn);
  
 
 

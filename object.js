@@ -55,10 +55,10 @@ class Cell {
     }
     
     removePiece() {
+        this.occupied = false;
         if (this.piece) {
             const pieceToRemove = this.piecediv;
 
-        //Fade out the piece and remove it
         if (pieceToRemove && this.element.contains(pieceToRemove)) {
             pieceToRemove.style.transition = 'opacity 0.3s ease-in-out';
             pieceToRemove.style.opacity = 0;
@@ -71,7 +71,6 @@ class Cell {
             this.piece = null;
             this.piecediv = null;
             this.team = null;
-            this.occupied = false;
         }
     }
 

@@ -20,7 +20,7 @@ body {
   flex-direction: column;
   background-color: #d7ccc8; 
   color: #333;
-  min-height: 100vh;
+  min-height: 100%;
   min-width: 100vw;
 }
     
@@ -49,7 +49,7 @@ html {
   align-items: center;
   justify-content: space-around;
   flex-grow: 1;
-  min-height:85vh;
+  height:80%;
 }
 
 .players{
@@ -147,6 +147,37 @@ html {
   width:3rem;
   position: relative;
   z-index: 10;
+}
+
+dialog button {
+  padding: 1rem;
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+  height: 4rem;
+  width: 8rem;
+  background-color: #607d8b; /* Darker background color */
+  color: #ffffff; /* White text color */
+  font-size: 1.2rem; /* Increase font size for better readability */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background and shadow */
+}
+
+/* Hover effects for the button */
+dialog button:hover {
+  background-color: #455a64; /* Slightly darker background on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow effect */
+}
+
+/* Active state for the button */
+dialog button:active {
+  background-color: #37474f; /* Even darker background when clicked */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Reduce shadow to indicate pressing */
+  transform: scale(0.95); /* Slightly shrink the button to indicate pressing */
+}
+
+.popup{
+  background-color: red;
 }
 
 
@@ -309,12 +340,113 @@ html {
   background-color: #2929298D;
 }
 
-@media (max-width: 1254px) {
-  .father-container{
+@media (max-width: 1200px) {
+  .father-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .players, .move_history {
+    min-height: 40vh;
+    width: 90%;
+  }
+
+  .players{
+    flex-direction: row;
+  }
+
+  .history{
+    min-height:20rem;
+    max-height:20rem;
+  }
+
+  .main_container_with_buttons{
+    justify-content: center;
+  }
+
+  .main-container {
+    min-height: 48rem;
+    width: 48rem;
+  }
+
+  .main-container>* {
+    height: 6rem;
+    width: 6rem;
+  }
+
+  .player, .history li {
+    width: 20rem;
+    height: auto;
+  }
+
+  .navbar-links ul {
     flex-direction: column;
   }
+
+  .buttons, .history-control {
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem 0;
+  }
+
+  .buttons a, .history-control a {
+    margin: 0.5rem 0;
+  }
+}
+
+/* For mobile phones */
+@media (max-width: 600px) {
+  .father-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .players{
+    flex-direction: column;
+  }
+
+  .players, .move_history {
+    min-height: 30vh;
+    width: 100%;
+  }
+
+  .move_history{
+    margin-top:-10rem;
+  }
+
   .history{
-    min-height: none;
+    min-height:15rem;
+    max-height:15rem;
+  }
+
+  .main-container {
+    min-height: 32rem;
+    width: 32rem;
+    margin-top:-10rem
+  }
+
+  .main-container>* {
+    height: 4rem;
+    width: 4rem;
+  }
+
+  .player, .history li {
+    width: 90%;
+    height: auto;
+  }
+
+  .navbar-links ul {
+    flex-direction: column;
+  }
+
+  .buttons, .history-control {
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem 0;
+  }
+
+  .buttons a, .history-control a {
+    margin: 0.5rem 0;
   }
 }
 
