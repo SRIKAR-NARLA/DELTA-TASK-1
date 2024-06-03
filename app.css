@@ -175,24 +175,24 @@ dialog button {
   text-align: center;
   height: 4rem;
   width: 8rem;
-  background-color: #607d8b; /* Darker background color */
-  color: #ffffff; /* White text color */
-  font-size: 1.2rem; /* Increase font size for better readability */
-  cursor: pointer; /* Change cursor to pointer on hover */
+  background-color: #607d8b; 
+  color: #ffffff;
+  font-size: 1.2rem; 
+  cursor: pointer; 
   transition: background-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
-/* Hover effects for the button */
+
 dialog button:hover {
-  background-color: #455a64; /* Slightly darker background on hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow effect */
+  background-color: #455a64; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
-/* Active state for the button */
+
 dialog button:active {
-  background-color: #37474f; /* Even darker background when clicked */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Reduce shadow to indicate pressing */
-  transform: scale(0.95); /* Slightly shrink the button to indicate pressing */
+  background-color: #37474f; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); 
+  transform: scale(0.95); 
 }
 
 
@@ -200,89 +200,89 @@ dialog button:active {
 
 @keyframes moveUp {
   0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 100%, 0) rotate(0deg);
   }
   100% {
-    transform: translate3d(0, -200%, 0) rotate(0deg);
+    transform: translate3d(0, -100%, 0) rotate(0deg);
   }
 }
 
 @keyframes moveDown {
   0% {
-    transform:translate3d(0, 0, 0) rotate(180deg);
+    transform:translate3d(0, -100%, 0) rotate(180deg);
   }
   100% {
-    transform:translate3d(0, 200%, 0) rotate(180deg);
+    transform:translate3d(0, 100%, 0) rotate(180deg);
   }
 }
 
 @keyframes moveUpRight {
   0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 100%, 0) rotate(0deg);
   }
   50% {
-    transform: translate3d(100%, 0, 0) rotate(45deg);
+    transform: translate3d(50%, 0, 0) rotate(45deg);
   }
   100% {
-    transform: translate3d(200%, 0, 0) rotate(90deg);
+    transform: translate3d(100%, 0, 0) rotate(90deg);
   }
 }
 
 @keyframes moveDownLeft {
   0% {
-    transform: translate3d(0, 0, 0) rotate(-180deg);
+    transform: translate3d(0, -100%, 0) rotate(-180deg);
   }
   50% {
-    transform: translate3d(0, 0, 0) rotate(-135deg);
+    transform: translate3d(-50%, 0, 0) rotate(-135deg);
   }
   100% {
-    transform: translate3d(-200%, 0, 0) rotate(-90deg);
+    transform: translate3d(-100%, 0, 0) rotate(-90deg);
   }
 }
 
 @keyframes moveLeft {
   from {
-    transform: translate3d(0, 0, 0) rotate(-90deg);
+    transform: translate3d(100%, 0, 0) rotate(-90deg);
   }
   to {
-    transform: translate3d(-200%, 0, 0) rotate(-90deg);
+    transform: translate3d(-100%, 0, 0) rotate(-90deg);
   }
 }
 
 @keyframes moveUpLeft {
   0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 100%, 0) rotate(0deg);
   }
   50% {
-    transform: translate3d(0, 0, 0) rotate(-45deg);
+    transform: translate3d(-50%, 0, 0) rotate(-45deg);
   }
   100% {
-    transform: translate3d(0, 0, 0) rotate(-90deg);
+    transform: translate3d(-100%, 0, 0) rotate(-90deg);
   }
 }
 
 @keyframes moveRight {
   from {
-    transform: translate3d(0, 0, 0) rotate(90deg);
+    transform: translate3d(-100%, 0, 0) rotate(90deg);
   }
   to {
-    transform: translate3d(200%, 0, 0) rotate(90deg);
+    transform: translate3d(100%, 0, 0) rotate(90deg);
   }
 }
 
 @keyframes moveDownRight {
   0% {
-    transform: translate3d(0, 0, 0) rotate(180deg);
+    transform: translate3d(0, -100%, 0) rotate(180deg);
   }
   50% {
-    transform: translate3d(0, 0, 0) rotate(135deg);
+    transform: translate3d(50%, 0, 0) rotate(135deg);
   }
   100% {
-    transform: translate3d(0, 0, 0) rotate(90deg);
+    transform: translate3d(100%, 0, 0) rotate(90deg);
   }
 }
 
-/* Define classes for each direction */
+
 .move-up {
   animation: moveUp 0.3s linear forwards;
   will-change: transform;
@@ -420,7 +420,7 @@ dialog button:active {
   }
 }
 
-/* For mobile phones */
+
 @media (max-width: 600px) {
   .father-container {
     flex-direction: column;

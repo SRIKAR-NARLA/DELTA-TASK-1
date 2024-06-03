@@ -118,7 +118,7 @@ const resetBgc = function(){
         cell.setBgc(`${colors[colorIndex]}`); 
         cell.removeBorder();
         if(!cell.piece && cell.occupied){
-            cell.setBgc(`red`);
+            cell.setBgc(`pink`);
         }
     });
     (memoryRicochet|| memoryRicochet===0) && cells_class[memoryRicochet].setBgc('#c3d6e5')
@@ -277,11 +277,11 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         diatext.innerText = 'Titan is Hit, Black wins';
                     }
                     clearInterval(intervalId);
-                    // animateBullet(bullet,path,false);
-                    // cells_class[nextIndex].setBullet(blackTurn, path);
-                    // timeoutId = setTimeout(() => {
-                    //     cells_class[nextIndex].removeBullet();
-                    // }, 150);
+                    animateBullet(bullet,path,false);
+                    cells_class[nextIndex].setBullet(blackTurn, path);
+                    timeoutId = setTimeout(() => {
+                        cells_class[nextIndex].removeBullet();
+                    }, 150);
                     cells_class[index].removeBullet();
                     ispaused = true;
                     const colors = ["#ccc", "#ddd"]; 
@@ -304,16 +304,16 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                     } else {
                         modifyHealth(nextIndex, tankHit);
                         clearInterval(intervalId);
-                        // animateBullet(bullet,path,false);
-                            // cells_class[nextIndex].setBullet(blackTurn, path);
-                            // timeoutId = setTimeout(() => {
-                            //     cells_class[nextIndex].removeBullet();
-                            // }, 150);
+                        animateBullet(bullet,path,false);
+                            cells_class[nextIndex].setBullet(blackTurn, path);
+                            timeoutId = setTimeout(() => {
+                                cells_class[nextIndex].removeBullet();
+                            }, 150);
                         piecedesaudio.play();
                         cells_class[index].removeBullet();
                         ispaused = !ispaused;
                         !isreplay && addCoins(blackTurn, 50);
-                        resolve(); // Resolve the Promise
+                        resolve(); 
                     }
                 } else if (cells_class[nextIndex].piece && cells_class[nextIndex].piece.includes('ricochet')) {
                     const ricochetHit = cells_class[nextIndex].piecediv;
@@ -381,17 +381,17 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         } else {
                             clearInterval(intervalId);
                             ispaused = !ispaused;
-                            // animateBullet(bullet,path,false);
-                            // cells_class[nextIndex].setBullet(blackTurn, path);
-                            // timeoutId = setTimeout(() => {
-                            //     cells_class[nextIndex].removeBullet();
-                            // }, 150);
+                            animateBullet(bullet,path,false);
+                            cells_class[nextIndex].setBullet(blackTurn, path);
+                            timeoutId = setTimeout(() => {
+                                cells_class[nextIndex].removeBullet();
+                            }, 150);
                             piecedesaudio.play();
                             cells_class[index].removeBullet();
                             cells_class[nextIndex].removePiece();
                             filledcells = filledcells.filter(el=>el!==nextIndex);
                             filledBotcells = filledBotcells.filter(el=>el!==nextIndex);
-                            resolve(); // Resolve the Promise
+                            resolve(); 
                         }
                     } else if (semiricochetHit.style.transform === 'rotate(90deg)') {
                         if (path === "up") {
@@ -409,17 +409,17 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         } else {
                             clearInterval(intervalId);
                             ispaused = !ispaused;
-                            // animateBullet(bullet,path,false);
-                            // cells_class[nextIndex].setBullet(blackTurn, path);
-                            // timeoutId = setTimeout(() => {
-                            //     cells_class[nextIndex].removeBullet();
-                            // }, 150);
+                            animateBullet(bullet,path,false);
+                            cells_class[nextIndex].setBullet(blackTurn, path);
+                            timeoutId = setTimeout(() => {
+                                cells_class[nextIndex].removeBullet();
+                            }, 150);
                             piecedesaudio.play();
                             cells_class[index].removeBullet();
                             cells_class[nextIndex].removePiece();
                             filledcells = filledcells.filter(el=>el!==nextIndex);
                             filledBotcells = filledBotcells.filter(el=>el!==nextIndex);
-                            resolve(); // Resolve the Promise
+                            resolve(); 
                         }
                     } else if (semiricochetHit.style.transform === 'rotate(180deg)') {
                         if (path === "up") {
@@ -438,16 +438,16 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                             clearInterval(intervalId);
                             ispaused = !ispaused;
                             piecedesaudio.play();
-                            // animateBullet(bullet,path,false);
-                            // cells_class[nextIndex].setBullet(blackTurn, path);
-                            // timeoutId = setTimeout(() => {
-                            //     cells_class[nextIndex].removeBullet();
-                            // }, 150);
+                            animateBullet(bullet,path,false);
+                            cells_class[nextIndex].setBullet(blackTurn, path);
+                            timeoutId = setTimeout(() => {
+                                cells_class[nextIndex].removeBullet();
+                            }, 150);
                             cells_class[index].removeBullet();
                             cells_class[nextIndex].removePiece();
                             filledcells = filledcells.filter(el=>el!==nextIndex);
                             filledBotcells = filledBotcells.filter(el=>el!==nextIndex);
-                            resolve(); // Resolve the Promise
+                            resolve(); 
                         }
                     } else if (semiricochetHit.style.transform === 'rotate(270deg)') {
                         if (path === "down") {
@@ -466,31 +466,31 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                             clearInterval(intervalId);
                             ispaused = !ispaused;
                             piecedesaudio.play();
-                            // animateBullet(bullet,path,false);
-                            // cells_class[nextIndex].setBullet(blackTurn, path);
-                            // timeoutId = setTimeout(() => {
-                            //     cells_class[nextIndex].removeBullet();
-                            // }, 150);
+                            animateBullet(bullet,path,false);
+                            cells_class[nextIndex].setBullet(blackTurn, path);
+                            timeoutId = setTimeout(() => {
+                                cells_class[nextIndex].removeBullet();
+                            }, 150);
                             cells_class[index].removeBullet();
                             cells_class[nextIndex].removePiece();
                             filledcells = filledcells.filter(el=>el!==nextIndex);
                             filledBotcells = filledBotcells.filter(el=>el!==nextIndex);
-                            resolve(); // Resolve the Promise
+                            resolve(); 
                         }
                     }
                 } else if (cells_class[nextIndex].piece && cells_class[nextIndex].piece.includes('cannon')) {
                     const cannonHit = cells_class[nextIndex].piecediv;
-                    // animateBullet(bullet,path,false);
-                    // cells_class[nextIndex].setBullet(blackTurn, path);
-                    // timeoutId = setTimeout(() => {
-                    //     cells_class[nextIndex].removeBullet();
-                    // }, 150);
+                    animateBullet(bullet,path,false);
+                    cells_class[nextIndex].setBullet(blackTurn, path);
+                    timeoutId = setTimeout(() => {
+                        cells_class[nextIndex].removeBullet();
+                    }, 150);
                     piecedesaudio.play();
                     cells_class[index].removeBullet();
                     modifyHealth(nextIndex, cannonHit);
                     clearInterval(intervalId);
                     ispaused = !ispaused;
-                    resolve(); // Resolve the Promise
+                    resolve(); 
                 }
             }
         }, 300);
@@ -789,7 +789,7 @@ const undoFunction = function(){
             cells_class[cell.index].setPiece(newPieceDiv);
         }else{
             cells_class[cell.index].occupied=true;
-            cells_class[cell.index].setBgc('red');
+            cells_class[cell.index].setBgc('pink');
         }
         cash1.innerText=cell.whitecash;
         cash2.innerText=cell.blackcash;
@@ -809,12 +809,14 @@ const redoFunction = async function() {
         });
         
         movesMemory[currentMove + 1].forEach(cell => {
+            console.log(cell)
             if(isreplay || (cell.destroyed===false && !isreplay)){
                 if(cell.invisible){
                     cells_class[cell.index].setPiece(cell.piecediv);
                     cells_class[cell.index].setBgc('pink');
+                    cells_class[cell.index].piece=null;
                     }
-                    if(cell.piecediv){
+                    else if(cell.piecediv){
                         const newPieceDiv = cell.piecediv;
                         newPieceDiv.style.transform = cell.rotation;
                         if(cell.health){
@@ -828,7 +830,7 @@ const redoFunction = async function() {
                         cells_class[cell.index].setPiece(newPieceDiv);
                     }else{
                         cells_class[cell.index].occupied=true;
-                        cells_class[cell.index].setBgc('red');
+                        cells_class[cell.index].setBgc('pink');
                     }
                 if ((currentMove % 2 !== 0 && cells_class[cell.index].piece === 'cannon_b') ||
                     (currentMove % 2 === 0 && cells_class[cell.index].piece === 'cannon_w')) {
@@ -885,7 +887,7 @@ const replay = async function() {
             cells_class[cell.index].setPiece(newPieceDiv);
         }else{
             cells_class[cell.index].occupied=true;
-            cells_class[cell.index].setBgc('red');
+            cells_class[cell.index].setBgc('pink');
         }
     });
 
@@ -951,19 +953,19 @@ function spellfn(cell,blackTurn){
             }
         }else if(cell.piece.includes('titan')){
             if(blackTurn){
-                if(whiteCash>=500){
+                if(blackCash>=50){
                     cell.piece=null
-                    whiteCash-=500;
-                    cash1.innerText = whiteCash;
+                    blackCash-=50;
+                    cash2.innerText = blackCash;
                     printMove('Vanish','TITAN','spell',blackTurn);
                 }else{
                     warning.showModal();
                 }
             }else{
-                if(blackCash>=500){
+                if(whiteCash>=50){
                     cell.piece=null
-                    blackCash-=500;
-                    cash2.innerText = blackCash;
+                    whiteCash-=50;
+                    cash1.innerText = whiteCash;
                     printMove('Vanish','TITAN','spell',blackTurn);
 
                 }else{
@@ -1005,7 +1007,7 @@ function spellfn(cell,blackTurn){
         if(blackTurn){
             if(blackCash>=50){
                 cell.occupied=true;
-                cell.setBgc('red');
+                cell.setBgc('pink');
                 blackCash-=50;
                 cash2.innerText = blackCash;
                 printMove('Block','Empty Cell','spell',blackTurn);
@@ -1016,7 +1018,7 @@ function spellfn(cell,blackTurn){
         }else{
             if(whiteCash>=50){
                 cell.occupied=true;
-                cell.setBgc('red');
+                cell.setBgc('pink');
                 whiteCash-=50;
                 cash1.innerText = whiteCash;
                 printMove('Block','Empty Cell','spell',blackTurn);

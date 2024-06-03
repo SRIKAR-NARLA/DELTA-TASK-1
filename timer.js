@@ -1,5 +1,5 @@
-let timer1 = 300; // 5 minutes in seconds
-let timer2 = 300; // 5 minutes in seconds
+let timer1 = 300; 
+let timer2 = 300; 
 let interval;
 
 const time1Element = document.getElementById('time1');

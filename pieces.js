@@ -13,8 +13,8 @@ const bullet_2 = '<div class="bullet" id="bullet_w"><img  style="transform:rotat
 
 const htmlToElement = function(html) {
     const template = document.createElement('template');
-    template.innerHTML = html; // Avoid extra whitespace
-    return template.content.firstChild; // Returns the first child of the template
+    template.innerHTML = html; 
+    return template.content.firstChild; 
 }
 
 const titan_b = htmlToElement(titan_1);
