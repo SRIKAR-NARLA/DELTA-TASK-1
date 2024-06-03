@@ -56,7 +56,7 @@ class Cell {
     
     removePiece() {
         this.occupied = false;
-        if (this.piece) {
+        if (this.piecediv) {
             const pieceToRemove = this.piecediv;
 
         if (pieceToRemove && this.element.contains(pieceToRemove)) {

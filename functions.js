@@ -158,25 +158,24 @@ const shoot = async function(blackTurn, spell=null,index=0) {
     let movesarray = [];
     cells_class.forEach((cell, index) => {
         if(!cell.piece && cell.piecediv){
-            movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:true,health:null });
+            movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:true,health:null,whitecash:whiteCash,blackcash:blackCash });
         }else if (cell.piecediv) {
             if(cell.piece.includes('tank')){
-                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:cell.piecediv.dataset.health });
+                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:cell.piecediv.dataset.health,whitecash:whiteCash,blackcash:blackCash });
 
             }else{
-                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:null });
+                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:null,whitecash:whiteCash,blackcash:blackCash });
             }
         }else if(cell.occupied){
-            movesarray.push({ index: index, piecediv: null,rotation:null,destroyed:false,invisible:false,health:null});
+            movesarray.push({ index: index, piecediv: null,rotation:null,destroyed:false,invisible:false,health:null,whitecash:whiteCash,blackcash:blackCash});
         }
     });
-    console.log(movesarray)
     isShooting = !isShooting;
     if (blackTurn) {
         timer2 = 300;
         if(index===0){
             const indexOfCannon = cells_class.findIndex(cell => cell.piece === "cannon_b");
-            addCoins(blackTurn, 10);
+            !isreplay && addCoins(blackTurn, 10);
             if (indexOfCannon !== -1) {
                 await moveBullet(indexOfCannon, blackTurn, spell);
             } 
@@ -186,7 +185,7 @@ const shoot = async function(blackTurn, spell=null,index=0) {
     } else {
         if(index===0){
             const indexOfCannon = cells_class.findIndex(cell => cell.piece === "cannon_w");
-            addCoins(blackTurn, 10);
+            !isreplay && addCoins(blackTurn, 10);
             if (indexOfCannon !== -1) {
                 await moveBullet(indexOfCannon, blackTurn, spell);
             } 
@@ -195,6 +194,8 @@ const shoot = async function(blackTurn, spell=null,index=0) {
         }
     }
     movesarray.forEach(obj=>{
+        obj.whitecash=whiteCash;
+        obj.blackcash=blackCash;
         if(cells_class[obj.index].occupied===false){
             obj.destroyed=true;
         }
@@ -207,6 +208,7 @@ const shoot = async function(blackTurn, spell=null,index=0) {
     currentMove = currentMove + 1;
     bar1.value=tank_w.dataset.health;
     bar2.value=tank_b.dataset.health;
+    console.log(tank_w.dataset.health)
 };
 
 
@@ -297,7 +299,7 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                                 cells_class[nextIndex].removeBullet();
                             }, 150);
                         ispaused = !ispaused;
-                        addCoins(blackTurn, 50);
+                        !isreplay && addCoins(blackTurn, 50);
                         resolve(); // Resolve the Promise
                     }
                 } else if (cells_class[nextIndex].piece && cells_class[nextIndex].piece.includes('ricochet')) {
@@ -605,8 +607,16 @@ const swapRicochet = async function(index,indexReplace,blackturn){
 const swapRicochetHandler = () => swapRicochet(memoryRicochet,memoryReplace,isBlackTurn);
 
 function resetComplete() {
+    whiteCash=0;
+    blackCash=0;
+    cash1.innerText=0;
+    cash2.innerText=0;
     bar1.value=5;
     bar2.value=5;
+    tank_b.dataset.health = 5;
+    tank_w.dataset.health = 5;
+    cannon_b.dataset.health = 3;
+    cannon_w.dataset.health = 3;
     pauseTimer();
     timer1 = 300;
     timer2 = 300;
@@ -625,8 +635,6 @@ function resetComplete() {
     movesMemory = [];
     isShooting = false;
     currentMove = 0;
-    cash1.innerText=0;
-    cash2.innerText=0;
     listSet.innerHTML='';
     cells_class.forEach(cell=>{
         cell.removePiece();
@@ -751,6 +759,8 @@ const undoFunction = function(){
             cells_class[cell.index].occupied=true;
             cells_class[cell.index].setBgc('red');
         }
+        cash1.innerText=cell.whitecash;
+        cash2.innerText=cell.blackcash;
     })
     currentMove = currentMove-1;
 }
@@ -792,6 +802,8 @@ const redoFunction = async function() {
                     (currentMove % 2 === 0 && cells_class[cell.index].piece === 'cannon_w')) {
                     cannon = cell.index;
                 }
+                cash1.innerText=cell.whitecash;
+                cash2.innerText=cell.blackcash;
             }
         });
         
@@ -800,7 +812,6 @@ const redoFunction = async function() {
 
         if (isreplay) {
             await shoot(currentMove % 2 !== 0, null, cannon);
-            console.log(currentMove)
         }else{
             currentMove = currentMove+1;
         }
@@ -809,6 +820,8 @@ const redoFunction = async function() {
 
 
 const replay = async function() {
+    whiteCash=0;
+    blackCash=0;
     cash1.innerText=0;
     cash2.innerText=0;
     bar1.value=5;
@@ -866,8 +879,11 @@ const printMove = function(memory1,memory2,way,blackTurn){
         list.innerText = `${cells_class[memory2].piece.slice(0,-2).toUpperCase()} Rotates To The Right`;
     }else if(way === 'left'){
         list.innerText = `${cells_class[memory2].piece.slice(0,-2).toUpperCase()} Rotates To The Left`;
-    }else{
+    }else if(way === 'swap'){
         list.innerText = `${cells_class[memory2].piece.slice(0,-2).toUpperCase()} Swaps With ${cells_class[memory1].piece.slice(0,-2).toUpperCase()}`;
+    }else if(way==='spell'){
+        list.innerText = `${memory1} Was Used On ${memory2}`;
+
     }
     if(blackTurn){
         list.style.color = '#EEEEEE';
@@ -885,8 +901,8 @@ function spellfn(cell,blackTurn){
                 bar1.value = tank_w.dataset.health;
                 whiteCash-=100;
                 cash1.innerText = whiteCash;
+                printMove('Heal','TANK','spell',blackTurn);
             }else{
-                console.log('ha')
                 warning.showModal();
             }
         }else if(cell.piece==='tank_b'){
@@ -895,23 +911,27 @@ function spellfn(cell,blackTurn){
                 bar2.value = tank_b.dataset.health;
                 blackCash-=100;
                 cash2.innerText = blackCash;
+                printMove('Heal','TANK','spell',blackTurn);
             }else{
                 warning.showModal();
             }
         }else if(cell.piece.includes('titan')){
             if(blackTurn){
-                if(whiteCash>=350){
+                if(whiteCash>=500){
                     cell.piece=null
-                    whiteCash-=350;
+                    whiteCash-=500;
                     cash1.innerText = whiteCash;
+                    printMove('Vanish','TITAN','spell',blackTurn);
                 }else{
                     warning.showModal();
                 }
             }else{
-                if(blackCash>=350){
+                if(blackCash>=500){
                     cell.piece=null
-                    blackCash-=350;
+                    blackCash-=500;
                     cash2.innerText = blackCash;
+                    printMove('Vanish','TITAN','spell',blackTurn);
+
                 }else{
                     warning.showModal();
                 }
@@ -927,6 +947,8 @@ function spellfn(cell,blackTurn){
                 }
                 blackCash-=200;
                 cash2.innerText = blackCash;
+                printMove('Strike','TANK','spell',blackTurn);
+
             }else{
                 warning.showModal();
             }
@@ -939,6 +961,8 @@ function spellfn(cell,blackTurn){
                 }
                 whiteCash-=200;
                 cash1.innerText = whiteCash;
+                printMove('Strike','TANK','spell',blackTurn);
+
             }else{
                 warning.showModal();
             }
@@ -950,6 +974,8 @@ function spellfn(cell,blackTurn){
                 cell.setBgc('red');
                 blackCash-=50;
                 cash2.innerText = blackCash;
+                printMove('Block','Empty Cell','spell',blackTurn);
+
             }else{
                 warning.showModal();
             }
@@ -959,6 +985,8 @@ function spellfn(cell,blackTurn){
                 cell.setBgc('red');
                 whiteCash-=50;
                 cash1.innerText = whiteCash;
+                printMove('Block','Empty Cell','spell',blackTurn);
+
             }else{
                 warning.showModal();
             } 
