@@ -877,8 +877,9 @@ const replay = async function() {
         if(cell.invisible){
             cells_class[cell.index].setPiece(cell.piecediv);
             cells_class[cell.index].setBgc('pink');
+            cells_class[cell.index].piece=null;
         }
-        if(cell.piecediv){
+        else if(cell.piecediv){
             const newPieceDiv = cell.piecediv;
             newPieceDiv.style.transform = cell.rotation;
             if(cell.health){
