@@ -27,13 +27,15 @@ function startTimer() {
                 timer1--;
                 if (timer1 <= 0) {
                     clearInterval(interval);
-                    alert("Player 1's time is up!");
+                    diatext.innerText = 'Time is up, Black wins';
+                    dialog.showModal();
                 }
             } else {
                 timer2--;
                 if (timer2 <= 0) {
                     clearInterval(interval);
-                    alert("Player 2's time is up!");
+                    diatext.innerText = 'Time is up, White wins';
+                    dialog.showModal();
                 }
             }
             updateTime();

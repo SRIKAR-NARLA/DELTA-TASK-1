@@ -35,10 +35,16 @@ let intervalId = null;
 let timeoutId = null;
 let whiteCash=0;
 let blackCash=0;
+const diatext = document.querySelector('.diatext');
 let cash1 = document.querySelector('#cash1');
 let cash2 = document.querySelector('#cash2');
 const warning = document.querySelector('.warning');
 const close = document.querySelector('#close');
+let bulletaudio = new Audio("/sounds/bullet.wav");
+let shootaudio = new Audio("/sounds/bullet-shoot.wav");
+let gameoveraudio = new Audio("/sounds/game-over.wav");
+let gameover2audio = new Audio("/sounds/game-over-2.wav");
+let piecedesaudio = new Audio("/sounds/half-ricochet-destroy.mp3");
     
 toggleButton.addEventListener('click', () => {
     navbarLinks.classList.toggle('active');

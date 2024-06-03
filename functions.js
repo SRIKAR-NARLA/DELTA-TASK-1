@@ -104,8 +104,9 @@ const validcells = function(object){
 
 const colorValidCells = function(moves){
     moves.forEach(move=>{      
-        const lmao = cells_class[cells_div.findIndex(div=>div.dataset.row===move[0].toString() && div.dataset.column===move[1].toString())];
-        lmao.setBgc("#e6e6fa");
+        const cell = cells_class[cells_div.findIndex(div=>div.dataset.row===move[0].toString() && div.dataset.column===move[1].toString())];
+        cell.setBgc("#e6e6fa");
+        cell.setBorder();
     })
 }
 
@@ -115,6 +116,7 @@ const resetBgc = function(){
     cells_class.forEach(cell => {
         const colorIndex = (cell.row + cell.column) % 2; 
         cell.setBgc(`${colors[colorIndex]}`); 
+        cell.removeBorder();
         if(!cell.piece && cell.occupied){
             cell.setBgc(`red`);
         }
@@ -152,22 +154,23 @@ const animateBullet = (bullet, path, reverse) => {
 };
 
 const shoot = async function(blackTurn, spell=null,index=0) {
+    bulletaudio.play();
     left.classList.add('hidden');
     right.classList.add('hidden');
     swap.classList.add('hidden');
     let movesarray = [];
     cells_class.forEach((cell, index) => {
         if(!cell.piece && cell.piecediv){
-            movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:true,health:null,whitecash:whiteCash,blackcash:blackCash });
+            movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:true,health:null,whitecash:whiteCash,blackcash:blackCash,p1health:null,p2health:null });
         }else if (cell.piecediv) {
             if(cell.piece.includes('tank')){
-                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:cell.piecediv.dataset.health,whitecash:whiteCash,blackcash:blackCash });
+                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:cell.piecediv.dataset.health,whitecash:whiteCash,blackcash:blackCash,p1health:null,p2health:null });
 
             }else{
-                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:null,whitecash:whiteCash,blackcash:blackCash });
+                movesarray.push({ index: index, piecediv: cell.piecediv,rotation:cell.piecediv.style.transform,destroyed:false,invisible:false,health:null,whitecash:whiteCash,blackcash:blackCash,p1health:null,p2health:null });
             }
         }else if(cell.occupied){
-            movesarray.push({ index: index, piecediv: null,rotation:null,destroyed:false,invisible:false,health:null,whitecash:whiteCash,blackcash:blackCash});
+            movesarray.push({ index: index, piecediv: null,rotation:null,destroyed:false,invisible:false,health:null,whitecash:whiteCash,blackcash:blackCash,p1health:null,p2health:null});
         }
     });
     isShooting = !isShooting;
@@ -196,6 +199,8 @@ const shoot = async function(blackTurn, spell=null,index=0) {
     movesarray.forEach(obj=>{
         obj.whitecash=whiteCash;
         obj.blackcash=blackCash;
+        obj.p1health = tank_w.dataset.health;
+        obj.p2health = tank_b.dataset.health;
         if(cells_class[obj.index].occupied===false){
             obj.destroyed=true;
         }
@@ -206,9 +211,10 @@ const shoot = async function(blackTurn, spell=null,index=0) {
         isShooting = !isShooting;
     }
     currentMove = currentMove + 1;
-    bar1.value=tank_w.dataset.health;
-    bar2.value=tank_b.dataset.health;
-    console.log(tank_w.dataset.health)
+    if(!isreplay){
+        bar1.value=tank_w.dataset.health;
+        bar2.value=tank_b.dataset.health;
+    }
 };
 
 
@@ -264,14 +270,19 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
             } else {
                 if (cells_class[nextIndex].piece && cells_class[nextIndex].piece.includes('titan')) {
                     if (cells_class[nextIndex].piece === 'titan_b') {
+                        gameoveraudio.play();
+                        diatext.innerText = 'Titan is Hit, White wins';
                     } else {
+                        gameover2audio.play();
+                        diatext.innerText = 'Titan is Hit, Black wins';
                     }
                     clearInterval(intervalId);
-                    animateBullet(bullet,path,false);
-                    cells_class[nextIndex].setBullet(blackTurn, path);
-                    timeoutId = setTimeout(() => {
-                        cells_class[nextIndex].removeBullet();
-                    }, 150);
+                    // animateBullet(bullet,path,false);
+                    // cells_class[nextIndex].setBullet(blackTurn, path);
+                    // timeoutId = setTimeout(() => {
+                    //     cells_class[nextIndex].removeBullet();
+                    // }, 150);
+                    cells_class[index].removeBullet();
                     ispaused = true;
                     const colors = ["#ccc", "#ddd"]; 
                     cells_class.forEach(cell=>{
@@ -293,17 +304,20 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                     } else {
                         modifyHealth(nextIndex, tankHit);
                         clearInterval(intervalId);
-                        animateBullet(bullet,path,false);
-                            cells_class[nextIndex].setBullet(blackTurn, path);
-                            timeoutId = setTimeout(() => {
-                                cells_class[nextIndex].removeBullet();
-                            }, 150);
+                        // animateBullet(bullet,path,false);
+                            // cells_class[nextIndex].setBullet(blackTurn, path);
+                            // timeoutId = setTimeout(() => {
+                            //     cells_class[nextIndex].removeBullet();
+                            // }, 150);
+                        piecedesaudio.play();
+                        cells_class[index].removeBullet();
                         ispaused = !ispaused;
                         !isreplay && addCoins(blackTurn, 50);
                         resolve(); // Resolve the Promise
                     }
                 } else if (cells_class[nextIndex].piece && cells_class[nextIndex].piece.includes('ricochet')) {
                     const ricochetHit = cells_class[nextIndex].piecediv;
+                    shootaudio.play();
                     if (ricochetHit.style.transform === 'rotate(0deg)' || ricochetHit.style.transform === 'rotate(180deg)') {
                         if (path === "up") {
                             index = nextIndex;
@@ -353,11 +367,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                     const semiricochetHit = cells_class[nextIndex].piecediv;
                     if (semiricochetHit.style.transform === 'rotate(0deg)') {
                         if (path === "down") {
+                            shootaudio.play();
                             index = nextIndex;
                             path = "right";
                             animateBullet(bullet,'down-right',false);
                             cells_class[nextIndex].setBullet(blackTurn);
                         } else if (path === "left") {
+                            shootaudio.play();
                             index = nextIndex;
                             path = "up";
                             animateBullet(bullet,'down-right',true);
@@ -365,11 +381,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         } else {
                             clearInterval(intervalId);
                             ispaused = !ispaused;
-                            animateBullet(bullet,path,false);
-                            cells_class[nextIndex].setBullet(blackTurn, path);
-                            timeoutId = setTimeout(() => {
-                                cells_class[nextIndex].removeBullet();
-                            }, 150);
+                            // animateBullet(bullet,path,false);
+                            // cells_class[nextIndex].setBullet(blackTurn, path);
+                            // timeoutId = setTimeout(() => {
+                            //     cells_class[nextIndex].removeBullet();
+                            // }, 150);
+                            piecedesaudio.play();
+                            cells_class[index].removeBullet();
                             cells_class[nextIndex].removePiece();
                             filledcells = filledcells.filter(el=>el!==nextIndex);
                             filledBotcells = filledBotcells.filter(el=>el!==nextIndex);
@@ -377,11 +395,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         }
                     } else if (semiricochetHit.style.transform === 'rotate(90deg)') {
                         if (path === "up") {
+                            shootaudio.play();
                             index = nextIndex;
                             path = "right";
                             animateBullet(bullet,'up-right',false);
                             cells_class[nextIndex].setBullet(blackTurn);
                         } else if (path === "left") {
+                            shootaudio.play();
                             index = nextIndex;
                             path = "down";
                             animateBullet(bullet,'up-right',true);
@@ -389,11 +409,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         } else {
                             clearInterval(intervalId);
                             ispaused = !ispaused;
-                            animateBullet(bullet,path,false);
-                            cells_class[nextIndex].setBullet(blackTurn, path);
-                            timeoutId = setTimeout(() => {
-                                cells_class[nextIndex].removeBullet();
-                            }, 150);
+                            // animateBullet(bullet,path,false);
+                            // cells_class[nextIndex].setBullet(blackTurn, path);
+                            // timeoutId = setTimeout(() => {
+                            //     cells_class[nextIndex].removeBullet();
+                            // }, 150);
+                            piecedesaudio.play();
+                            cells_class[index].removeBullet();
                             cells_class[nextIndex].removePiece();
                             filledcells = filledcells.filter(el=>el!==nextIndex);
                             filledBotcells = filledBotcells.filter(el=>el!==nextIndex);
@@ -401,11 +423,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         }
                     } else if (semiricochetHit.style.transform === 'rotate(180deg)') {
                         if (path === "up") {
+                            shootaudio.play();
                             index = nextIndex;
                             path = "left";
                             animateBullet(bullet,'up-left',false);
                             cells_class[nextIndex].setBullet(blackTurn);
                         } else if (path === "right") {
+                            shootaudio.play();
                             index = nextIndex;
                             path = "down";
                             animateBullet(bullet,'up-left',true);
@@ -413,11 +437,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         } else {
                             clearInterval(intervalId);
                             ispaused = !ispaused;
-                            animateBullet(bullet,path,false);
-                            cells_class[nextIndex].setBullet(blackTurn, path);
-                            timeoutId = setTimeout(() => {
-                                cells_class[nextIndex].removeBullet();
-                            }, 150);
+                            piecedesaudio.play();
+                            // animateBullet(bullet,path,false);
+                            // cells_class[nextIndex].setBullet(blackTurn, path);
+                            // timeoutId = setTimeout(() => {
+                            //     cells_class[nextIndex].removeBullet();
+                            // }, 150);
+                            cells_class[index].removeBullet();
                             cells_class[nextIndex].removePiece();
                             filledcells = filledcells.filter(el=>el!==nextIndex);
                             filledBotcells = filledBotcells.filter(el=>el!==nextIndex);
@@ -425,11 +451,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         }
                     } else if (semiricochetHit.style.transform === 'rotate(270deg)') {
                         if (path === "down") {
+                            shootaudio.play();
                             index = nextIndex;
                             path = "left";
                             animateBullet(bullet,'down-left',false);
                             cells_class[nextIndex].setBullet(blackTurn);
                         } else if (path === "right") {
+                            shootaudio.play();
                             index = nextIndex;
                             path = "up";
                             animateBullet(bullet,'down-left',true);
@@ -437,11 +465,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                         } else {
                             clearInterval(intervalId);
                             ispaused = !ispaused;
-                            animateBullet(bullet,path,false);
-                            cells_class[nextIndex].setBullet(blackTurn, path);
-                            timeoutId = setTimeout(() => {
-                                cells_class[nextIndex].removeBullet();
-                            }, 150);
+                            piecedesaudio.play();
+                            // animateBullet(bullet,path,false);
+                            // cells_class[nextIndex].setBullet(blackTurn, path);
+                            // timeoutId = setTimeout(() => {
+                            //     cells_class[nextIndex].removeBullet();
+                            // }, 150);
+                            cells_class[index].removeBullet();
                             cells_class[nextIndex].removePiece();
                             filledcells = filledcells.filter(el=>el!==nextIndex);
                             filledBotcells = filledBotcells.filter(el=>el!==nextIndex);
@@ -450,11 +480,13 @@ const controlBullet = function(index, path, blackTurn, spell,bullet) {
                     }
                 } else if (cells_class[nextIndex].piece && cells_class[nextIndex].piece.includes('cannon')) {
                     const cannonHit = cells_class[nextIndex].piecediv;
-                    animateBullet(bullet,path,false);
-                    cells_class[nextIndex].setBullet(blackTurn, path);
-                    timeoutId = setTimeout(() => {
-                        cells_class[nextIndex].removeBullet();
-                    }, 150);
+                    // animateBullet(bullet,path,false);
+                    // cells_class[nextIndex].setBullet(blackTurn, path);
+                    // timeoutId = setTimeout(() => {
+                    //     cells_class[nextIndex].removeBullet();
+                    // }, 150);
+                    piecedesaudio.play();
+                    cells_class[index].removeBullet();
                     modifyHealth(nextIndex, cannonHit);
                     clearInterval(intervalId);
                     ispaused = !ispaused;
@@ -804,6 +836,8 @@ const redoFunction = async function() {
                 }
                 cash1.innerText=cell.whitecash;
                 cash2.innerText=cell.blackcash;
+                bar1.value = cell.p1health;
+                bar2.value = cell.p2health;
             }
         });
         

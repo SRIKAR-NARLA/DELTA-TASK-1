@@ -136,11 +136,6 @@ meter{
     
 }
 
-.cell{
-  /* overflow: hidden; */
-  border: 1px solid #333;
-}
-
 .coin{
   background-color:#eee; 
   border-radius: 20%;
@@ -167,8 +162,8 @@ meter{
 }
 
 .bullet *{
-  height:3rem;
-  width:3rem;
+  height:4rem;
+  width:4rem;
   position: relative;
   z-index: 10;
 }
@@ -184,7 +179,7 @@ dialog button {
   color: #ffffff; /* White text color */
   font-size: 1.2rem; /* Increase font size for better readability */
   cursor: pointer; /* Change cursor to pointer on hover */
-  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background and shadow */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
 /* Hover effects for the button */
@@ -205,85 +200,85 @@ dialog button:active {
 
 @keyframes moveUp {
   0% {
-    transform: translate3d(0, 4rem, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
   100% {
-    transform: translate3d(0, -4rem, 0) rotate(0deg);
+    transform: translate3d(0, -200%, 0) rotate(0deg);
   }
 }
 
 @keyframes moveDown {
   0% {
-    transform: translate3d(0, -4rem, 0) rotate(180deg);
+    transform:translate3d(0, 0, 0) rotate(180deg);
   }
   100% {
-    transform: translate3d(0, 4rem, 0) rotate(180deg);
+    transform:translate3d(0, 200%, 0) rotate(180deg);
   }
 }
 
 @keyframes moveUpRight {
   0% {
-    transform: translate3d(0, 4rem, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
   50% {
-    transform: translate3d(0, 0, 0) rotate(45deg);
+    transform: translate3d(100%, 0, 0) rotate(45deg);
   }
   100% {
-    transform: translate3d(4rem, 0, 0) rotate(90deg);
+    transform: translate3d(200%, 0, 0) rotate(90deg);
   }
 }
 
 @keyframes moveDownLeft {
   0% {
-    transform: translate3d(0, -4rem, 0) rotate(-180deg);
+    transform: translate3d(0, 0, 0) rotate(-180deg);
   }
   50% {
     transform: translate3d(0, 0, 0) rotate(-135deg);
   }
   100% {
-    transform: translate3d(-4rem, 0, 0) rotate(-90deg);
+    transform: translate3d(-200%, 0, 0) rotate(-90deg);
   }
 }
 
 @keyframes moveLeft {
   from {
-    transform: translate3d(4rem, 0, 0) rotate(-90deg);
+    transform: translate3d(0, 0, 0) rotate(-90deg);
   }
   to {
-    transform: translate3d(-4rem, 0, 0) rotate(-90deg);
+    transform: translate3d(-200%, 0, 0) rotate(-90deg);
   }
 }
 
 @keyframes moveUpLeft {
   0% {
-    transform: translate3d(0, 4rem, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
   50% {
     transform: translate3d(0, 0, 0) rotate(-45deg);
   }
   100% {
-    transform: translate3d(-125%, 0, 0) rotate(-90deg);
+    transform: translate3d(0, 0, 0) rotate(-90deg);
   }
 }
 
 @keyframes moveRight {
   from {
-    transform: translate3d(-125%, 0, 0) rotate(90deg);
+    transform: translate3d(0, 0, 0) rotate(90deg);
   }
   to {
-    transform: translate3d(125%, 0, 0) rotate(90deg);
+    transform: translate3d(200%, 0, 0) rotate(90deg);
   }
 }
 
 @keyframes moveDownRight {
   0% {
-    transform: translate3d(0, -125%, 0) rotate(180deg);
+    transform: translate3d(0, 0, 0) rotate(180deg);
   }
   50% {
     transform: translate3d(0, 0, 0) rotate(135deg);
   }
   100% {
-    transform: translate3d(125%, 0, 0) rotate(90deg);
+    transform: translate3d(0, 0, 0) rotate(90deg);
   }
 }
 
@@ -372,6 +367,11 @@ dialog button:active {
     width: 90%;
   }
 
+  .coin img{
+    height:3rem;
+    width:3rem;
+  }
+
   .players{
     flex-direction: row;
   }
@@ -393,6 +393,11 @@ dialog button:active {
   .main-container>* {
     height: 6rem;
     width: 6rem;
+  }
+
+  .bullet *{
+    height: 3rem;
+    width: 3rem;
   }
 
   .player, .history li {
@@ -422,6 +427,11 @@ dialog button:active {
     align-items: center;
   }
 
+  .coin img{
+    height:2rem;
+    width:2rem;
+  }
+
   .players{
     flex-direction: column;
   }
@@ -432,7 +442,7 @@ dialog button:active {
   }
 
   .move_history{
-    margin-top:-10rem;
+    margin-top:0;
   }
 
   .history{
@@ -440,10 +450,15 @@ dialog button:active {
     max-height:15rem;
   }
 
+  .bullet *{
+    height: 2rem;
+    width:2rem;
+  }
+
   .main-container {
     min-height: 32rem;
     width: 32rem;
-    margin-top:-5rem
+    margin-top:15rem
   }
 
   .main-container>* {

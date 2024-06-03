@@ -195,6 +195,8 @@ dialog.popup {
     align-items: center;
     visibility: hidden; 
     transition: transform 1s ease-in-out, visibility 0s 1s; 
+    transition: transform 1s ease-in-out, visibility 0s 1s; 
+    background: linear-gradient(to bottom right, #4c4c4c, #828e8e);
 }
 
 dialog[open].popup {
@@ -220,6 +222,7 @@ dialog.warning{
     align-items: center;
     visibility: hidden; 
     transition: transform 1s ease-in-out, visibility 0s 1s; 
+    background: linear-gradient(to bottom right, #d3d3d3, #828e8e);
 }
 
 dialog[open].warning {

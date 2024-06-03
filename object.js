@@ -31,6 +31,14 @@ class Cell {
         this.element.style.backgroundColor = newBgc; 
     }
 
+    setBorder(){
+        this.element.style.border = '1px solid #333';
+    }
+
+    removeBorder(){
+        this.element.style.border = null;
+    }
+
     setTeam(newTeam) {
         this.team = newTeam;  
     }
@@ -74,7 +82,7 @@ class Cell {
         }
     }
 
-    setBullet(turn,path) {
+    setBullet(turn) {
         if(turn){
             this.element.appendChild(bullet_b);
         }else{

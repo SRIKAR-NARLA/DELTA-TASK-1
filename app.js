@@ -105,6 +105,7 @@ cells_div.forEach((cell,index)=>{
                     filledcells.forEach(index=>{
                         if(cells_class[index].piece && !cells_class[index].piece.includes('titan')){
                             cells_class[index].setBgc('#cde5d4');
+                            cells_class[index].setBorder();
                         }
                     })
                     memoryRicochet = memory;
