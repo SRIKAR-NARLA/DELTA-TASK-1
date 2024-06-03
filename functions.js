@@ -954,18 +954,18 @@ function spellfn(cell,blackTurn){
             }
         }else if(cell.piece.includes('titan')){
             if(blackTurn){
-                if(blackCash>=50){
+                if(blackCash>=500){
                     cell.piece=null
-                    blackCash-=50;
+                    blackCash-=500;
                     cash2.innerText = blackCash;
                     printMove('Vanish','TITAN','spell',blackTurn);
                 }else{
                     warning.showModal();
                 }
             }else{
-                if(whiteCash>=50){
+                if(whiteCash>=500){
                     cell.piece=null
-                    whiteCash-=50;
+                    whiteCash-=500;
                     cash1.innerText = whiteCash;
                     printMove('Vanish','TITAN','spell',blackTurn);
 
